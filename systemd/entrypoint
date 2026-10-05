@@ -1,0 +1,10 @@
+#! /bin/sh
+
+set -e
+[ -b /dev/loop67 ] || mknod -m 660 /dev/loop67 b 7 67
+chown root:disk /dev/loop67
+
+losetup -d /dev/loop67 > /dev/null 2> /dev/null || echo "Unbinding /dev/loop67.."
+losetup /dev/loop67 /wsl.fs
+
+exec /lib/systemd/systemd

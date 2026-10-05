@@ -1,0 +1,83 @@
+= Systemd
+
+> Fenrir ID: `systemd` +
+> Branch: `systemd` +
+> Points: `30`
+
+IMPORTANT: Be careful when experimenting with systemd! Use `fenrir env` to enter a sandbox: it does not protect from all the potential errors, however it effectively reduce their numbers.
+
+== Task submission
+
+Put all the systemd unit files in the `systemd` directory:
+
+[,text,subs="+macros"]
+----
+icon:folder[] ...
+├─ icon:folder[] systemd
+│  ├─ icon:file-text[] ...
+│  ├─ icon:file-text[] teardown.sh
+│  └─ icon:file-text[] setup.sh
+└─ icon:folder[] .git
+----
+
+Add a `setup.sh` script which installs and activates your systemd units.
+
+Add a `teardown.sh` script which removes and deactivates your systemd units.
+
+== WSL (15 points)
+
+WSL allows you to operate with Windows filesystem through a Linux OS. This task focuses on reimplementing that feature by using systemd. We'll use Ubuntu as the host system.
+
+=== NTFS partition
+
+NTFS is a low-level (like `ext4` or `btrfs` in Linux) filesystem which is used in Windows. On a real computer with Windows you might have a separate device (e.g. `/dev/nvme0n1p3`) which corresponds to the NTFS fs. We are to use `/dev/loop67` to mock that ntfs partition. Your task is to set up systemd the way that `/dev/loop67` is automatically mounted at the `/mnt/c`.
+
+=== Make tmp be tmpfs
+
+For a long time Ubuntu have avoided mounting `tmpfs` on `/tmp`. To fix that you had to either set up the `/etc/fstab` or systemd. We are to choose the second option. Set up systemd to automatically mount `tmpfs` on `/temp`.
+
+CAUTION: *We use `/temp` instead of `/tmp`!!!*
+
+Remember to add `nodev` and `nosuid` options. The size of `/temp` must be 2MB.
+
+== Docker (15 points)
+
+Docker is a client-server application which uses the `/var/run/docker.sock` file to connect. Both the server and the socket are usually managed by systemd. You are to reimplement this mechanism. We'll use name `reckod` instead of `docker`.
+
+=== Socket
+
+If you have Linux with systemd and docker is installed use `systemctl` to find the unit file which manages the `docker.sock` file.
+
+.Hint for macOS
+[%collapsible]
+====
+See https://sources.debian.org/src/docker.io/28.5.2%2Bdfsg4-3/engine/contrib/init/systemd/docker.socket[that]
+====
+
+Create a similar unit file for the `/var/run/reckod.sock` file.
+
+=== Server
+
+To start the server use `/usr/bin/server`. Create systemd unit which automatically starts the server. Remember to make the program's output be accessible through `journalctl`.
+
+To test the server you can use `/usr/bin/client`. Try invoking the client 10 times: what happens? Use `journalctl` to investigate the problem.
+
+== Questions
+* How to see all mounts within a system? how much free space they have?
+* Which mode should `/tmp` have? Why?
+* What is the `nodev` mount option?
+* How to inspect journald logs?
+* What is the difference between `systemctl enable` and `systemctl start`?
+* How to print a loaded systemd unit file?
+* What is `systemctl daemon-reload`?
+
+== Copyright
+
+pass:[<i class="fab fa-creative-commons"></i>]
+pass:[<i class="fab fa-creative-commons-by"></i>]
+pass:[<i class="fab fa-creative-commons-nc"></i>]
+pass:[<i class="fab fa-creative-commons-sa"></i>]
+
+The project is licensed under the terms of the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+
+(C) 2026-present *Iwan Kalinin* <mailto:koefic.cien@gmail.com[koefic.cien@gmail.com]>
