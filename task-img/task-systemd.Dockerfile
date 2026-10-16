@@ -19,6 +19,9 @@ RUN apt update && apt install --no-install-recommends -y \
     udev \
     libbpf1 \
     gpg \
+    git \
+    util-linux-extra \
+    shellcheck \
     && apt clean
 
 RUN useradd -G sudo -m -s "/bin/bash" fikus && \

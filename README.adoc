@@ -2,9 +2,9 @@
 
 > Fenrir ID: `systemd` +
 > Branch: `systemd` +
-> Points: `30`
+> Points: `45`
 
-IMPORTANT: Be careful when experimenting with systemd! Use `fenrir env` to enter a sandbox: it does not protect from all the potential errors, however it effectively reduce their numbers.
+IMPORTANT: Be careful when experimenting with systemd! Use `fenrir env` to enter a sandbox: it does not protect against all the potential errors, however, it effectively reduces the risk of making them.
 
 == Task submission
 
@@ -24,9 +24,11 @@ Add a `setup.sh` script which installs and activates your systemd units.
 
 Add a `teardown.sh` script which removes and deactivates your systemd units.
 
-== WSL (15 points)
+Both scripts will be executed under `sudo`. The username is `fikus`.
 
-WSL allows you to operate with Windows filesystem through a Linux OS. This task focuses on reimplementing that feature by using systemd. We'll use Ubuntu as the host system.
+== WSL (20 points)
+
+WSL allows you to access the Windows filesystem from a Linux OS. This task focuses on reimplementing that feature by using systemd. We'll use Ubuntu as the host system.
 
 === NTFS partition
 
@@ -34,15 +36,15 @@ NTFS is a low-level (like `ext4` or `btrfs` in Linux) filesystem which is used i
 
 === Make tmp be tmpfs
 
-For a long time Ubuntu have avoided mounting `tmpfs` on `/tmp`. To fix that you had to either set up the `/etc/fstab` or systemd. We are to choose the second option. Set up systemd to automatically mount `tmpfs` on `/temp`.
+For a long time Ubuntu has avoided mounting `tmpfs` on `/tmp`. To fix that you had to either set up the `/etc/fstab` or systemd. We are to choose the second option. Set up systemd to automatically mount `tmpfs` on `/temp`.
 
 CAUTION: *We use `/temp` instead of `/tmp`!!!*
 
 Remember to add `nodev` and `nosuid` options. The size of `/temp` must be 2MB.
 
-== Docker (15 points)
+== Docker (25 points)
 
-Docker is a client-server application which uses the `/var/run/docker.sock` file to connect. Both the server and the socket are usually managed by systemd. You are to reimplement this mechanism. We'll use name `reckod` instead of `docker`.
+Docker is a client-server application which uses the `/var/run/docker.sock` file to connect. Both the server and the socket are usually managed by systemd. You are to reimplement this mechanism. We'll use name `reckod` instead of `docker`. A system-wide group `reckod` is already created.
 
 === Socket
 
@@ -58,7 +60,7 @@ Create a similar unit file for the `/var/run/reckod.sock` file.
 
 === Server
 
-To start the server use `/usr/bin/server`. Create systemd unit which automatically starts the server. Remember to make the program's output be accessible through `journalctl`.
+To start the server use `/usr/bin/server`. Create systemd unit which automatically starts the server. Make sure that the program's logs are accessible through `journalctl`.
 
 To test the server you can use `/usr/bin/client`. Try invoking the client 10 times: what happens? Use `journalctl` to investigate the problem.
 
@@ -70,6 +72,7 @@ To test the server you can use `/usr/bin/client`. Try invoking the client 10 tim
 * What is the difference between `systemctl enable` and `systemctl start`?
 * How to print a loaded systemd unit file?
 * What is `systemctl daemon-reload`?
+* What is the difference between `newgrp` and `usermod -a -G`?
 
 == Copyright
 
